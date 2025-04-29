@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kiosko Virtual</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="firebase-config.js"></script>
+</head>
+<body>
+
+  <!-- Botón 🛒 flotante derecha -->
+  <button id="verCarrito" class="carrito-btn-superior">
+    🛒 Canasta (<span id="contadorCarrito">0</span>)
+  </button>
+
+  <!-- Ventana de productos en canasta debajo del botón -->
+  <div id="canastaFija" class="canasta-fija oculto">
+    <h3>🧺 Productos en Canasta</h3>
+    <ul id="listaCarrito"></ul>
+    <p id="total">Total: Q0</p>
+    <button onclick="finalizarCompra()" class="boton-comprar">✅ Finalizar Compra</button>
+  </div>
+
+  <!-- Contenido principal -->
+  <main class="contenedor">
+    <h1>Kiosko Virtual</h1>
+
+    <div class="botones">
+      <button onclick="mostrarCategoria('comida')">🍔 Comida</button>
+      <button onclick="mostrarCategoria('bebida')">🥤 Bebidas</button>
+      <button onclick="mostrarCategoria('recuerdo')">🎁 Recuerdos</button>
+    </div>
+
+    <div id="contenedor-productos" class="productos-grid"></div>
+
+    <!-- 🔽 Historial de Ventas -->
+    <div style="margin-top: 60px;">
+      <h3>📜 Historial de Ventas</h3>
+      <label for="filtroHistorial">Filtrar por:</label>
+      <select id="filtroHistorial" onchange="mostrarHistorial()">
+        <option value="1">Hoy</option>
+        <option value="7">Últimos 7 días</option>
+        <option value="30">Últimos 30 días</option>
+      </select>
+
+      <table class="historial-ventas">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody id="tablaHistorial"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3"><strong>Cierre de Caja</strong></td>
+            <td id="cierreCaja">Q0.00</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <!-- 🔼 Fin historial -->
+  </main>
+
+  <!-- 📤 Exportación de ventas -->
+  <div style="margin-top: 30px;">
+    <h3>📤 Exportar Ventas por Rango</h3>
+    <button onclick="exportarVentas(1)">📅 Hoy</button>
+    <button onclick="exportarVentas(7)">🗓️ Últimos 7 días</button>
+    <button onclick="exportarVentas(30)">📆 Últimos 30 días</button>
+  </div>
+
+  <!-- 🔧 Sección para actualizar stock -->
+  <div class="contenedor" style="margin-top: 60px;">
+    <h3>🛠️ Administración de Stock</h3>
+
+    <div>
+      <label for="productoStock">ID del producto:</label>
+      <input type="text" id="productoStock" placeholder="Ej. comida1">
+
+      <label for="nuevoStock">Nuevo stock:</label>
+      <input type="number" id="nuevoStock" min="0" placeholder="Ej. 100">
+
+      <button onclick="actualizarStockProducto()">📦 Actualizar Stock</button>
+    </div>
+
+    <p id="resultadoStock" style="margin-top: 10px; font-weight: bold;"></p>
+  </div>
+
+  <!-- Script principal -->
+  <script src="main.js"></script>
+</body>
+</html>
